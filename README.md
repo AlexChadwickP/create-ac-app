@@ -1,6 +1,6 @@
 # Fullstack Starter Template
 
-A modern monorepo starter for building full-stack applications with tRPC, React, and PostgreSQL. Created by [Alex Chadwick](https://github.com/yourusername).
+A modern monorepo starter for building full-stack applications with tRPC, React, and PostgreSQL. Created by [Alex Chadwick](https://github.com/AlexChadwickP).
 
 ## Tech Stack
 
@@ -19,7 +19,7 @@ A modern monorepo starter for building full-stack applications with tRPC, React,
 **Steps:**
 ```bash
 # Clone and install
-git clone <your-repo>
+git clone git@github.com:AlexChadwickP/create-ac-app.git
 cd fullstack-starter
 npm install
 
