@@ -1,8 +1,9 @@
 import { z } from 'zod';
 import { router, publicProcedure, protectedProcedure } from '../lib/trpc';
 import { auth } from '../lib/auth';
-import { user } from '../db/schema';
+import {role, user} from '../db/schema';
 import { eq, sql } from 'drizzle-orm';
+import {generateId} from "better-auth";
 
 export const authRouter = router({
 		signup: publicProcedure
@@ -19,9 +20,40 @@ export const authRouter = router({
 
 						const isFirstUser = count === 0;
 
+
+						// Ensure roles exist
+						let adminRole = await ctx.db.query.role.findFirst({
+								where: eq(role.sysName, 'admin')
+						});
+
+						console.log("Admin role: ", adminRole);
+
+						let userRole = await ctx.db.query.role.findFirst({
+								where: eq(role.sysName, 'user')
+						});
+
+						if (!adminRole) {
+								[adminRole] = await ctx.db.insert(role).values({
+										id: generateId(15),
+										sysName: 'admin',
+										name: 'Administrator',
+										description: 'Full system access',
+								}).returning();
+						}
+
+						if (!userRole) {
+								[userRole] = await ctx.db.insert(role).values({
+										id: generateId(15),
+										sysName: 'user',
+										name: 'User',
+										description: 'Standard user access',
+								}).returning();
+						}
+
 						// Create user via better-auth
 						await auth.api.signUpEmail({
 								body: input,
+
 						});
 
 						// Get the created user
@@ -30,11 +62,12 @@ export const authRouter = router({
 								.from(user)
 								.where(eq(user.email, input.email));
 
-						// Make first user admin
-						if (isFirstUser && newUser) {
+						if (newUser) {
+								const assignedRoleId = isFirstUser ? adminRole.id : userRole.id;
+
 								await ctx.db
 										.update(user)
-										.set({ role: 'admin' })
+										.set({ roleId: assignedRoleId })
 										.where(eq(user.id, newUser.id));
 
 								return { ...newUser, role: 'admin' };

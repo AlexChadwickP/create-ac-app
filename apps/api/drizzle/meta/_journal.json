@@ -29,6 +29,13 @@
       "when": 1760641363954,
       "tag": "0003_purple_firebrand",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1760644102829,
+      "tag": "0004_late_gabe_jones",
+      "breakpoints": true
     }
   ]
 }

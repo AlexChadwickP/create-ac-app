@@ -21,7 +21,7 @@ function Users() {
 												<h3>{user.name}</h3>
 												<p>{user.email}</p>
 												<div className={styles.badges}>
-														{user.role === 'admin' && <span className={styles.admin}>Admin</span>}
+														{user.role?.sysName === 'admin' && <span className={styles.admin}>Admin</span>}
 														{user.id === me?.id && <span className={styles.you}>You</span>}
 												</div>
 										</div>

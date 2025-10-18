@@ -1,8 +1,8 @@
 import { initTRPC, TRPCError } from '@trpc/server';
 import { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch';
 import { auth } from './auth';
-import { user } from '../db/schema';
-import { eq, sql } from 'drizzle-orm';
+import {role, user} from '../db/schema';
+import { eq } from 'drizzle-orm';
 import {db} from "../db";
 
 export async function createContext(opts: FetchCreateContextFnOptions) {
@@ -37,9 +37,10 @@ export const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
 		const [userRecord] = await ctx.db
 				.select()
 				.from(user)
-				.where(eq(user.id, ctx.user.id));
+				.where(eq(user.id, ctx.user.id))
+				.leftJoin(role, eq(user.roleId, role.id));
 
-		if (userRecord?.role !== 'admin') {
+		if (userRecord.role?.sysName !== 'admin') {
 				throw new TRPCError({ code: 'FORBIDDEN' });
 		}
 		return next({ ctx });

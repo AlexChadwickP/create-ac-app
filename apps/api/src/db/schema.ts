@@ -1,5 +1,17 @@
 import { pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core";
 
+export const role = pgTable("role", {
+		id: text("id").primaryKey(),
+		name: text("name").notNull().unique(),
+		sysName: text("sys_name").notNull().unique(),
+		description: text("description"),
+		createdAt: timestamp("created_at").defaultNow().notNull(),
+		updatedAt: timestamp("updated_at")
+				.defaultNow()
+				.$onUpdate(() => new Date())
+				.notNull(),
+});
+
 export const user = pgTable("user", {
 		id: text("id").primaryKey(),
 		name: text("name").notNull(),
@@ -11,6 +23,8 @@ export const user = pgTable("user", {
 				.defaultNow()
 				.$onUpdate(() => /* @__PURE__ */ new Date())
 				.notNull(),
+		roleId: text("role_id")
+				.references(() => role.id, { onDelete: "restrict" })
 });
 
 export const session = pgTable("session", {
