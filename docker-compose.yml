@@ -74,7 +74,4 @@ networks:
 volumes:
   postgres-data-v2:
   redis-data:
-  authentik-media:
-  authentik-templates:
-  authentik-certs:
   azurite-data:
