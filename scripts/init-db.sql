@@ -1,3 +1,1 @@
--- Create Authentik database
-CREATE DATABASE authentik;
-GRANT ALL PRIVILEGES ON DATABASE authentik TO dev;
+-- Any scripts if you need to init the db before drizzle runs migrations
